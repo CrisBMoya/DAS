@@ -6,3 +6,6 @@ This project is a transformation of the [Unscramble Metabolomics R](https://gith
 Currently, the shiny app supports PLS and PCA. It return the graphics and the datatables used to build the graphs.
 
 Support for modify aesthetic characteristics is pending.
+
+
+MOD
