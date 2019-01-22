@@ -7,4 +7,4 @@ Currently, the shiny app supports PLS and PCA. It return the graphics and the da
 
 Support for modify aesthetic characteristics is pending.
 
-#Temp
+#TempNEW
