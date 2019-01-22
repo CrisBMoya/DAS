@@ -135,6 +135,8 @@ shinyServer(function(input, output, session) {
   
   #Shiny Alert to start computation
   observeEvent(input$ShinyAlert, {
+    #Wait
+    Sys.sleep(0.5)
     #Display
     shinyalert(
       inputId="ShinyAlertSECOND",
