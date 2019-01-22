@@ -27,7 +27,7 @@ shinyUI(fluidPage(
   extendShinyjs(text = jsResetCode),                      # Add the js code to the page
   
   #Page title on browser
-  title="Metabolomics",
+  title="PLS-PCA",
   
   fluidRow(
     column(3,

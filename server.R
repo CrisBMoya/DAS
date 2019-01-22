@@ -22,10 +22,10 @@
 set.seed(101)
 
 #Create Simple Ellipse (Hotellings)
-source(file="/home/tobal/RFiles/Shiny/Meta/Offline/Scripts/simpleEllipse[FUNCTION].R")
-source(file="/home/tobal/RFiles/Shiny/Meta/Offline/Scripts/LogicalMatrix[FUNCTION].R")
-source(file="/home/tobal/RFiles/Shiny/Meta/Offline/Scripts/VIP[FUNCTION].R")
-source(file="/home/tobal/RFiles/Shiny/Meta/Offline/Scripts/LimitFUN[FUNCTION].R")
+source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/simpleEllipse[FUNCTION].R")
+source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/LogicalMatrix[FUNCTION].R")
+source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/VIP[FUNCTION].R")
+source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/LimitFUN[FUNCTION].R")
 
 #Blank Theme for ggplot
 theme_blank <- theme(
