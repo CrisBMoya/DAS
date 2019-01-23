@@ -1,4 +1,3 @@
-
 #Loading Libraries
 {
   library("sp")
@@ -18,13 +17,15 @@
   library("V8")
 }
 
-jsResetCode <- "shinyjs.reset = function() {history.go(0)}" # Define the js method that resets the page
+#Method to reset shiny page
+jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
 
 shinyUI(fluidPage(
   
-  useShinyjs(),                                           # Include shinyjs in the UI
-  extendShinyjs(text = jsResetCode),                      # Add the js code to the page
+  #Allow shiny to use JavaScript in UI
+  useShinyjs(),                                           
+  extendShinyjs(text = jsResetCode),                      
   
   #Page title on browser
   title="PLS-PCA",
@@ -35,6 +36,8 @@ shinyUI(fluidPage(
            titlePanel("PLS & PCA")),
     column(6),
     column(3,
+           
+           #Button to Reset Shiny
            actionButton(inputId="reset_button", label="Resetear", icon=icon("times"), 
                         style="color: #fff; 
                         border-radius: 10px;

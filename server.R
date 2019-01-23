@@ -93,6 +93,39 @@ shinyServer(function(input, output, session) {
     #Load user input table
     DFFile=input$file1
     DFReact$DF=openxlsx::read.xlsx(xlsxFile=DFFile$datapath, sheet=input$SheetNameInput)
+    
+    #Validate numeric part of DataFrame
+    NumericTemp=sapply(X=DFReact$DF[,ColMeta():ncol(DFReact$DF)], FUN=class)
+    #Which values are either of class numeric or integer?
+    #If the result of the negation of any is TRUE, then it means that there are values that 
+    #arent either numeric nor integer, ergo, the DF is wrong.
+    NumericValidation=any(!(NumericTemp %in% c("numeric","integer")))
+    if(NumericValidation){
+      shinyalert(
+        title = "ERROR",
+        closeOnEsc = FALSE, #Should be false
+        closeOnClickOutside = FALSE,
+        html = FALSE,
+        type = "warning",
+        showConfirmButton = FALSE,
+        showCancelButton = FALSE, #Should be false
+        confirmButtonText = "Cerrar",
+        confirmButtonCol = "#AEDEF4",
+        timer = 2900,
+        imageUrl = "",
+        animation = TRUE,
+        text="Valores no-numericos entre los metabolitos!"
+      )
+      #Wait
+      Sys.sleep(3)
+      #Resetear pagina
+      js$reset() 
+      
+    } else {
+      DFReact$DF
+    }
+    
+    
   })
   
   #Print Loaded Table
@@ -100,9 +133,33 @@ shinyServer(function(input, output, session) {
     DT::datatable(data=DFReact$DF, options=list(lengthMenu=c(5,10)))
   })
   
-  #Dekete Row of current loaded DF
+  #Delete Row of current loaded DF
   observeEvent(input$DeleteRowBtn, {
-    DFReact$DF=DFReact$DF[-which(DFReact$DF[,1]==paste0(RowRemove())),]
+    #Require DF existente
+    req(input$LoadFile)
+    
+    #Validate rownames to delete.
+    #If the user input dont exist in the row names then throws an error
+    if(RowRemove() %in% DFReact$DF[,1]){
+      DFReact$DF=DFReact$DF[-which(DFReact$DF[,1]==paste0(RowRemove())),]
+    }else{
+      shinyalert(
+        title = "ERROR",
+        closeOnEsc = FALSE, #Should be false
+        closeOnClickOutside = FALSE,
+        html = FALSE,
+        type = "error",
+        showConfirmButton = TRUE,
+        showCancelButton = FALSE, #Should be false
+        confirmButtonText = "Cerrar",
+        confirmButtonCol = "#AEDEF4",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE,
+        text="El valor ingresado no existe!"
+      )
+    }
+    
   })
   
   #Reset Page Buttons
@@ -296,8 +353,6 @@ shinyServer(function(input, output, session) {
   #                    | |              
   #                    |_|              
   
-  
-  
   #Graph PLS
   PLSPlot=eventReactive(input$Compute, { 
     
@@ -406,7 +461,7 @@ shinyServer(function(input, output, session) {
     #Score Plot SIN Hotellings T2-Test
     PCA_NoLimits=ggplot(data=pcaData,aes(x=as.numeric(pcaData$X1), y=as.numeric(pcaData$X2))) + 
       geom_point() + 
-      geom_text(label=Input$Name, nudge_y=0.5) +
+      geom_text(label=Input[,1], nudge_y=0.5) +
       labs(x=paste("PC-1 (",labelPercent[1],")", sep=""), y=paste("PC-2 (",labelPercent[2],")", sep=""))
     #Add a Cross
     PCA_NoLimits=PCA_NoLimits + geom_hline(yintercept = 0, alpha=0.2) + geom_vline(xintercept = 0, alpha=0.2)
@@ -432,7 +487,7 @@ shinyServer(function(input, output, session) {
       geom_polygon(data=ellTest,aes(x=V1, y=V2),inherit.aes = F, colour="black", fill=NA, alpha=0.5) +
       geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
       labs(x=paste("PC-1 (",labelPercent[1],")", sep=""), y=paste("PC-2 (",labelPercent[2],")", sep="")) +
-      geom_text(label=Input$Name, nudge_y=0.5) +
+      geom_text(label=Input[,1], nudge_y=0.5) +
       theme_blank
     
     #With Limits
@@ -571,9 +626,6 @@ shinyServer(function(input, output, session) {
       dev.off()
     }
   )
-  
-  
-  
   
 }) #End of file
 
