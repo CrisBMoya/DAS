@@ -94,36 +94,18 @@ shinyServer(function(input, output, session) {
     DFFile=input$file1
     DFReact$DF=openxlsx::read.xlsx(xlsxFile=DFFile$datapath, sheet=input$SheetNameInput)
     
-    #Validate numeric part of DataFrame
-    NumericTemp=sapply(X=DFReact$DF[,ColMeta():ncol(DFReact$DF)], FUN=class)
-    #Which values are either of class numeric or integer?
-    #If the result of the negation of any is TRUE, then it means that there are values that 
-    #arent either numeric nor integer, ergo, the DF is wrong.
-    NumericValidation=any(!(NumericTemp %in% c("numeric","integer")))
-    if(NumericValidation){
-      shinyalert(
-        title = "ERROR",
-        closeOnEsc = FALSE, #Should be false
-        closeOnClickOutside = FALSE,
-        html = FALSE,
-        type = "warning",
-        showConfirmButton = FALSE,
-        showCancelButton = FALSE, #Should be false
-        confirmButtonText = "Cerrar",
-        confirmButtonCol = "#AEDEF4",
-        timer = 2900,
-        imageUrl = "",
-        animation = TRUE,
-        text="Valores no-numericos entre los metabolitos!"
-      )
-      #Wait
-      Sys.sleep(3)
-      #Resetear pagina
-      js$reset() 
-      
-    } else {
-      DFReact$DF
-    }
+    #Output Button to load
+    output$CalcularUI=renderUI({
+      actionButton(inputId="Compute", label="Calcular", icon=icon("angle-right"),
+                   style="color: #fff;
+                   border-radius: 12px;
+                   background-color: #428bca;
+                   border-color: #357ebd;
+                   font-size: 20px;
+                   padding: 10px 40px;
+                   display: inline-block;
+                   margin-left: 20%;")
+    })
     
     
   })
@@ -171,22 +153,54 @@ shinyServer(function(input, output, session) {
     #Require precense of DF before computing data
     req(input$file1)
     
-    #Alert of Computing, purely aesthetic
-    shinyalert(
-      inputId="ShinyAlert",
-      title = "Computing...",
-      closeOnEsc = FALSE, #Should be false
-      closeOnClickOutside = FALSE,
-      html = FALSE,
-      type = "info",
-      showConfirmButton = TRUE,
-      showCancelButton = FALSE, #Should be false
-      confirmButtonText = "Next",
-      confirmButtonCol = "#AEDEF4",
-      timer = 0,
-      imageUrl = "",
-      animation = TRUE
-    )
+    #Validate numeric part of DataFrame
+    NumericTemp=sapply(X=DFReact$DF[,ColMeta():ncol(DFReact$DF)], FUN=class)
+    #Which values are either of class numeric or integer?
+    #If the result of the negation of any is TRUE, then it means that there are values that 
+    #arent either numeric nor integer, ergo, the DF is wrong.
+    NumericValidation=any(!(NumericTemp %in% c("numeric","integer")))
+    if(NumericValidation){
+      shinyalert(
+        title = "ERROR",
+        closeOnEsc = FALSE, #Should be false
+        closeOnClickOutside = FALSE,
+        html = FALSE,
+        type = "warning",
+        showConfirmButton = FALSE,
+        showCancelButton = FALSE, #Should be false
+        confirmButtonText = "Cerrar",
+        confirmButtonCol = "#AEDEF4",
+        timer = 2900,
+        imageUrl = "",
+        animation = TRUE,
+        text="Valores no-numericos entre los metabolitos!"
+      )
+      #Wait
+      Sys.sleep(3)
+      #Resetear pagina
+      js$reset() 
+      
+    } else {
+      
+      #Alert of Computing, purely aesthetic
+      shinyalert(
+        inputId="ShinyAlert",
+        title = "Computing...",
+        closeOnEsc = FALSE, #Should be false
+        closeOnClickOutside = FALSE,
+        html = FALSE,
+        type = "info",
+        showConfirmButton = TRUE,
+        showCancelButton = FALSE, #Should be false
+        confirmButtonText = "Next",
+        confirmButtonCol = "#AEDEF4",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE
+      )
+    }
+    
+    
   })
   
   #Shiny Alert to start computation

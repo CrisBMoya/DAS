@@ -84,13 +84,13 @@ shinyUI(fluidPage(
                                splitLayout(
                                  #Range of categorical variables
                                  numericInput(inputId="Cat1", label="Desde", 
-                                              value=2, step=1),
+                                              value=0, step=1),
                                  numericInput(inputId="Cat2", label="Hasta", 
-                                              value=2, step=1)
+                                              value=0, step=1)
                                ),
                                #Column which is holding the metabolites
                                numericInput(inputId="Met1", label="Columna metabolitos:", 
-                                            value=3, step=1)
+                                            value=0, step=1)
                                
                                
                                
@@ -122,16 +122,11 @@ shinyUI(fluidPage(
                                hr(),
                                #Compute Data Alert Panel
                                useShinyalert(),
+                               
                                #Compute
-                               actionButton(inputId="Compute", label="Calcular", icon=icon("angle-right"),
-                                            style="color: #fff; 
-                                            border-radius: 12px; 
-                                            background-color: #428bca; 
-                                            border-color: #357ebd;
-                                            font-size: 20px;
-                                            padding: 10px 40px;
-                                            display: inline-block;
-                                            margin-left: 20%;"),
+                               #Button to Load the DF
+                               uiOutput(outputId="CalcularUI"),
+                               
                                #Conditional signal to show
                                div(style="visibility: hidden;", textOutput(outputId="ConditionalPanel"))
                                
