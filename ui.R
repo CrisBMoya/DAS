@@ -90,8 +90,12 @@ shinyUI(fluidPage(
                                ),
                                #Column which is holding the metabolites
                                numericInput(inputId="Met1", label="Columna metabolitos:", 
-                                            value=0, step=1)
+                                            value=0, step=1),
                                
+                               #Suggestions - Not working for now.
+                               hr(),
+                               textInput(label="Sugerencias?", inputId="Sug"),
+                               actionButton(inputId="SugBtn", label="Enviar Comentarios")
                                
                                
                                
@@ -101,7 +105,7 @@ shinyUI(fluidPage(
                         column(6,
                                #Output Table
                                box(
-                                 title = "Data Frame:", width = NULL, status = "primary",
+                                 title = "Tabla de Datos:", width = NULL, status = "primary",
                                  div(style = 'overflow-x: scroll', DT::dataTableOutput('contents'))
                                )
                         ),
@@ -154,21 +158,33 @@ shinyUI(fluidPage(
                                tags$p("Dimensiones de gráfico:"),
                                splitLayout(
                                  numericInput(inputId="Width", label="Ancho", value=1, min=1, max=20, step=1),
-                                 numericInput(inputId="Height", label="Alto", value=1, min=1, max=20, step=1)),
+                                 numericInput(inputId="Height", label="Alto", value=1, min=1, max=20, step=1))
                                
-                               #Plot Button
-                               hr(),
-                               radioButtons(inputId="PlotChoose", label="Graficar:", 
-                                            choices=list("G1"=1, "G2"=2,
-                                                         "G3"=3, "G4"=4,
-                                                         "G5"=5), 
-                                            selected=1)
+                               
                         ),
                         
                         column(7,
                                
-                               #Place to put Plots
-                               plotlyOutput(outputId="PlotlyOutput") %>% withSpinner(color="#0dc5c1")
+                               
+                               #Tabset to Output Plots
+                               tabsetPanel(type = "tabs",
+                                           tabPanel(title="G1", 
+                                                    actionButton(inputId="PlotG1", label="Plot G1"),
+                                                    plotOutput(outputId="G1")),
+                                           tabPanel(title="G2", 
+                                                    actionButton(inputId="PlotG2", label="Plot G2"),
+                                                    plotOutput(outputId="G2")),
+                                           tabPanel(title="G3", 
+                                                    actionButton(inputId="PlotG3", label="Plot G3"),
+                                                    plotOutput(outputId="G3")),
+                                           tabPanel(title="G4", 
+                                                    actionButton(inputId="PlotG4", label="Plot G4"),
+                                                    plotOutput(outputId="G4")),
+                                           tabPanel(title="G5", 
+                                                    actionButton(inputId="PlotG5", label="Plot G5"),
+                                                    plotOutput(outputId="G5")))
+                               
+                               
                         ),
                         
                         column(3,

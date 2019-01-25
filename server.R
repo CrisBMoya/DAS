@@ -47,6 +47,12 @@ theme_blank <- theme(
 #Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
   
+  #Disable some optons by default
+  shinyjs::disable(id="Cat1")
+  shinyjs::disable(id="Cat2")
+  shinyjs::disable(id="Met1")
+  shinyjs::disable(id="RemoveRow")
+  
   #Load user input data
   ColCatMin=reactive({input$Cat1})
   ColCatMax=reactive({input$Cat2})
@@ -94,6 +100,7 @@ shinyServer(function(input, output, session) {
     DFFile=input$file1
     DFReact$DF=openxlsx::read.xlsx(xlsxFile=DFFile$datapath, sheet=input$SheetNameInput)
     
+    
     #Output Button to load
     output$CalcularUI=renderUI({
       actionButton(inputId="Compute", label="Calcular", icon=icon("angle-right"),
@@ -107,6 +114,11 @@ shinyServer(function(input, output, session) {
                    margin-left: 20%;")
     })
     
+    #Reactivate User Input
+    shinyjs::enable(id="Cat1")
+    shinyjs::enable(id="Cat2")
+    shinyjs::enable(id="Met1")
+    shinyjs::enable(id="RemoveRow")
     
   })
   
@@ -182,21 +194,24 @@ shinyServer(function(input, output, session) {
       
     } else {
       
+      #Wait
+      Sys.sleep(time=0.5)
       #Alert of Computing, purely aesthetic
       shinyalert(
-        inputId="ShinyAlert",
-        title = "Computing...",
+        inputId="DummyAlert",
+        title = "Calculando...",
         closeOnEsc = FALSE, #Should be false
         closeOnClickOutside = FALSE,
         html = FALSE,
         type = "info",
         showConfirmButton = TRUE,
         showCancelButton = FALSE, #Should be false
-        confirmButtonText = "Next",
-        confirmButtonCol = "#AEDEF4",
+        confirmButtonText = "Siguiente",
+        confirmButtonCol = "#428bca",
         timer = 0,
         imageUrl = "",
-        animation = TRUE
+        animation = TRUE,
+        text="Presione el boton para continuar"
       )
     }
     
@@ -204,61 +219,65 @@ shinyServer(function(input, output, session) {
   })
   
   #Shiny Alert to start computation
-  observeEvent(input$ShinyAlert, {
+  observeEvent(input$DummyAlert, {
     #Wait
-    Sys.sleep(0.5)
+    Sys.sleep(time=0.5)
     #Display
     shinyalert(
-      inputId="ShinyAlertSECOND",
-      title = "Done!",
-      text = "Download your results",
+      inputId="ComputeAlert",
+      title = "Listo!",
+      text = "Descarga tus Resultados",
       closeOnEsc = FALSE, #Should be false
       closeOnClickOutside = FALSE,
       html = FALSE,
       type = "success",
       showConfirmButton = TRUE,
       showCancelButton = FALSE, #Should be false
-      confirmButtonText = "Download",
-      confirmButtonCol = "#AEDEF4",
+      confirmButtonText = "Descargar",
+      confirmButtonCol = "#428bca",
       timer = 0,
       imageUrl = "",
       animation = TRUE
     )
+    
   })
   
   #Hide Tab2 by default
   hideTab(inputId="NavPage1", target="Tab2")
   
   #When Calculate buttons is pressed:
-  observeEvent(input$ShinyAlertSECOND, {
+  observeEvent(input$ComputeAlert, {
     #First hide Tab1
     hideTab(inputId="NavPage1", target="Tab1")
     #Then show Tab2 (hidden by default)
     showTab(inputId="NavPage1", target="Tab2")
     #Then go to Tab2
-    updateTabsetPanel(session, "NavPage1",
-                      selected = "Tab2")
+    updateTabsetPanel(session, "NavPage1", selected = "Tab2")
   })
   
-  #Plot Based on Button
-  observeEvent(input$PlotChoose, {
-    
-    #Choose Plot
-    output$PlotlyOutput=renderPlotly({
-      if(input$PlotChoose==1){
-        PLSPlot()$p1Plotly
-      } else if(input$PlotChoose==2){
-        PLSPlot()$p1v2Plotly
-      } else if(input$PlotChoose==3){
-        PCAPlot()$PCAP2Plotly
-      } else if(input$PlotChoose==4){
-        PCAPlot()$PCAP1Plotly
-      } else if(input$PlotChoose==5){
-        VIPPlot()$VIP_Plot 
-      }
-    })
+  #Suggest Button - It's an internal joke for now. Could it be something in the future.
+  observeEvent(input$SugBtn, {
+    shinyalert(
+      title = "",
+      text = "AJAJAJAJAJAJAJAJAJAJAJAJAJAJAJA no.",
+      closeOnEsc = FALSE, #Should be false
+      closeOnClickOutside = FALSE,
+      html = FALSE,
+      type = "error",
+      showConfirmButton = FALSE,
+      showCancelButton = FALSE, #Should be false
+      timer = 0,
+      imageUrl = "",
+      animation = TRUE
+    )
   })
   
+  #Plot
+  observeEvent(input$PlotG1, {output$G1=renderPlot(PLSPlot()$p1)})
+  observeEvent(input$PlotG2, {output$G2=renderPlot(PLSPlot()$p1v2)})
+  observeEvent(input$PlotG3, {output$G3=renderPlot(PCAPlot()$PCA_NoLimits)})
+  observeEvent(input$PlotG4, {output$G4=renderPlot(PCAPlot()$Scores_PCA_NoHotellings)})
+  observeEvent(input$PlotG5, {output$G5=renderPlot(VIPPlot()$VIP_Plot)})
   
   #    _____                             
   #   |  __ \                            
@@ -270,7 +289,7 @@ shinyServer(function(input, output, session) {
   #
   
   #Preare data
-  ComputeData=eventReactive(input$ShinyAlertSECOND, {
+  ComputeData=eventReactive(input$DummyAlert, {
     
     #Take input
     DFData=as.data.frame(DFReact$DF)
