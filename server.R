@@ -272,7 +272,7 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  #Plot
+  #Plot every graph
   observeEvent(input$PlotG1, {output$G1=renderPlot(PLSPlot()$p1)})
   observeEvent(input$PlotG2, {output$G2=renderPlot(PLSPlot()$p1v2)})
   observeEvent(input$PlotG3, {output$G3=renderPlot(PCAPlot()$PCA_NoLimits)})

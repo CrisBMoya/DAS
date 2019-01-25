@@ -166,7 +166,7 @@ shinyUI(fluidPage(
                         column(7,
                                
                                
-                               #Tabset to Output Plots
+                               #Tabset to Output Plots in an organized manner
                                tabsetPanel(type = "tabs",
                                            tabPanel(title="G1", 
                                                     actionButton(inputId="PlotG1", label="Plot G1"),
