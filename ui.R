@@ -17,6 +17,10 @@
   library("V8")
 }
 
+#Load modules
+source(file="~/RFiles/Shiny/DAS/Modules/TabPlot&Descarga.R")
+source(file="~/RFiles/Shiny/DAS/Modules/CargaDeDatos.R")
+
 #Method to reset shiny page
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
@@ -55,158 +59,9 @@ shinyUI(fluidPage(
   
   #Tabs
   navbarPage(title="Analisis: ", id="NavPage1",
-             tabPanel(title="Cargar Datos", value="Tab1",
-                      
-                      fluidRow(
-                        
-                        #Left Column with options and general setup
-                        column(3,
-                               #Titulo
-                               titlePanel("Setup"),
-                               hr(),
-                               
-                               #Load Selected File
-                               fileInput(inputId="file1", label='Subir Excel', accept = c(".xlsx")),
-                               
-                               #Choose Sheet Name
-                               uiOutput(outputId="SheetName"),
-                               
-                               #Button to Load the DF
-                               uiOutput(outputId="SPACER"),
-                               uiOutput(outputId="LoadFileUI"),
-                               
-                               #tags$p(tags$b("Cargar Datos:")),
-                               #actionButton(inputId="LoadFile", label="Cargar Tabla"),
-                               #Options
-                               hr(),
-                               tags$p("Rango Categorias:"),
-                               
-                               splitLayout(
-                                 #Range of categorical variables
-                                 numericInput(inputId="Cat1", label="Desde", 
-                                              value=0, step=1),
-                                 numericInput(inputId="Cat2", label="Hasta", 
-                                              value=0, step=1)
-                               ),
-                               #Column which is holding the metabolites
-                               numericInput(inputId="Met1", label="Columna metabolitos:", 
-                                            value=0, step=1),
-                               
-                               #Suggestions - Not working for now.
-                               hr(),
-                               textInput(label="Sugerencias?", inputId="Sug"),
-                               actionButton(inputId="SugBtn", label="Enviar Comentarios")
-                               
-                               
-                               
-                        ),
-                        
-                        #Right column with dataframe output
-                        column(6,
-                               #Output Table
-                               box(
-                                 title = "Tabla de Datos:", width = NULL, status = "primary",
-                                 div(style = 'overflow-x: scroll', DT::dataTableOutput('contents'))
-                               )
-                        ),
-                        
-                        column(3,
-                               #Titulo
-                               titlePanel("Editar Tabla"),
-                               #Wether remove or not a row
-                               hr(),
-                               tags$p("¿Remover fila?"),
-                               textInput(inputId="RemoveRow", label="Nombre de Fila a remover", value=""),
-                               
-                               #Button to remove
-                               actionButton(inputId="DeleteRowBtn", label="Borrar"),
-                               
-                               #Titulo
-                               #titlePanel("Output"),
-                               hr(),
-                               #Compute Data Alert Panel
-                               useShinyalert(),
-                               
-                               #Compute
-                               #Button to Load the DF
-                               uiOutput(outputId="CalcularUI"),
-                               
-                               #Conditional signal to show
-                               div(style="visibility: hidden;", textOutput(outputId="ConditionalPanel"))
-                               
-                               
-                        )
-                        
-                      )
-             ), #End of First Panel
-             tabPanel(title="Graficar y Descargar", value="Tab2",
-                      fluidRow(
-                        
-                        column(2,
-                               #Titulo
-                               titlePanel("Estetica:"),
-                               hr(),
-                               
-                               #Estetic Pannel
-                               #Size of dots and text
-                               tags$p("Tamaño de Puntos y Texto:"),
-                               splitLayout(
-                                 numericInput(inputId="DotSize", label="Puntos", value=1, min=1, max=20, step=1),
-                                 numericInput(inputId="TextSize", label="Textos", value=1, min=1, max=20, step=1)),
-                               
-                               #Width and height
-                               tags$p("Dimensiones de gráfico:"),
-                               splitLayout(
-                                 numericInput(inputId="Width", label="Ancho", value=1, min=1, max=20, step=1),
-                                 numericInput(inputId="Height", label="Alto", value=1, min=1, max=20, step=1))
-                               
-                               
-                        ),
-                        
-                        column(7,
-                               
-                               
-                               #Tabset to Output Plots in an organized manner
-                               tabsetPanel(type = "tabs",
-                                           tabPanel(title="G1", 
-                                                    actionButton(inputId="PlotG1", label="Plot G1"),
-                                                    plotOutput(outputId="G1")),
-                                           tabPanel(title="G2", 
-                                                    actionButton(inputId="PlotG2", label="Plot G2"),
-                                                    plotOutput(outputId="G2")),
-                                           tabPanel(title="G3", 
-                                                    actionButton(inputId="PlotG3", label="Plot G3"),
-                                                    plotOutput(outputId="G3")),
-                                           tabPanel(title="G4", 
-                                                    actionButton(inputId="PlotG4", label="Plot G4"),
-                                                    plotOutput(outputId="G4")),
-                                           tabPanel(title="G5", 
-                                                    actionButton(inputId="PlotG5", label="Plot G5"),
-                                                    plotOutput(outputId="G5")))
-                               
-                               
-                        ),
-                        
-                        column(3,
-                               #Title
-                               titlePanel("Descargar"),
-                               
-                               #Conditional panel
-                               hr(),
-                               conditionalPanel(condition="output.ConditionalPanel=='DONE!'",
-                                                splitLayout(
-                                                  downloadButton(outputId="DownTablePLS", label="Tablas PLS"),
-                                                  downloadButton(outputId="DownTablePCA", label="Tablas PCA")
-                                                ),
-                                                splitLayout(
-                                                  downloadButton(outputId="DownFigPLS", label="Graficos PLS"),
-                                                  downloadButton(outputId="DownFigPCA", label="Graficos PCA")
-                                                )
-                               )
-                               
-                        )
-                      )
-             ) #End of Second Panel
+             TabCargaDeDatos(id="TabCargaDeDatos")
+             , #End of First Panel
+             TabPlotDescarga(id="TabPlot&Descarga")
   )
 )
 )
