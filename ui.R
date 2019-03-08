@@ -18,8 +18,8 @@
 }
 
 #Load modules
-source(file="~/RFiles/Shiny/DAS/Modules/TabPlot&Descarga.R")
-source(file="~/RFiles/Shiny/DAS/Modules/CargaDeDatos.R")
+source(file="~/RFiles/Shiny/DAS/Modules/UIModules/TabPlot&Descarga.R")
+source(file="~/RFiles/Shiny/DAS/Modules/UIModules/CargaDeDatos.R")
 
 #Method to reset shiny page
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
@@ -64,5 +64,7 @@ shinyUI(fluidPage(
              TabPlotDescarga(id="TabPlot&Descarga")
   )
 )
+
+
 )
 
