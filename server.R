@@ -28,7 +28,7 @@ source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/LimitFUN[FUNCTION].R")
 source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/PLSPlotModule.R")
 source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/PCAPlotModule.R")
 source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/ComputeDataModule.R")
-
+source(file="~/RFiles/Shiny/DAS/Modules/UIModules/LandingTab.R")
 #Blank Theme for ggplot
 theme_blank <- theme(
   panel.grid.major = element_blank(),
@@ -46,15 +46,55 @@ theme_blank <- theme(
 #                                    
 #                                    
 
-
 #Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
+  
+  #Hide Navigation Pane by default
+  hide(id="NavPage1")
+  
+  #Show landing popup, as a modal. Landing Page.
+  LandingTab()
+  
+  #When one of the analysis is chosen
+  observeEvent(input$An1, {
+    #Remove Modal
+    removeModal()
+    
+    #Add Title to page for this specific analysis
+    output$PageTitle=renderUI({
+      titlePanel(title="PLS & PCA")
+    })
+    
+    #Reset Button
+    output$ResetBtn=renderUI({
+      actionButton(inputId="reset_button", label="Resetear", icon=icon("times"), 
+                   style="color: #fff; 
+                        border-radius: 10px;
+                        background-color: #d2322d;
+                        border-color: #ac2925;
+                        font-size: 15px;
+                        padding: 6px 30px;
+                        display: inline-block;
+                        margin-top: 20px; 
+                        float:right;")
+    })
+    
+    #First hide Tab1
+    hideTab(inputId="NavPage1", target="Tab0")
+    #Then show Tab2 (hidden by default)
+    showTab(inputId="NavPage1", target="Tab1")
+    #Then go to Tab2
+    updateTabsetPanel(session, "NavPage1", selected = "Tab1")
+  })
+  
   
   #Disable some optons by default
   shinyjs::disable(id="Cat1")
   shinyjs::disable(id="Cat2")
   shinyjs::disable(id="Met1")
   shinyjs::disable(id="RemoveRow")
+  shinyjs::disable(id="An2")
+  shinyjs::disable(id="An3")
   
   #Load user input data
   ColCatMin=reactive({input$Cat1})
@@ -247,8 +287,7 @@ shinyServer(function(input, output, session) {
     
   })
   
-  #Hide Tab2 by default
-  hideTab(inputId="NavPage1", target="Tab2")
+  
   
   #When Calculate buttons is pressed:
   observeEvent(input$ComputeAlert, {

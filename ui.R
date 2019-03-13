@@ -20,6 +20,7 @@
 #Load modules
 source(file="~/RFiles/Shiny/DAS/Modules/UIModules/TabPlot&Descarga.R")
 source(file="~/RFiles/Shiny/DAS/Modules/UIModules/CargaDeDatos.R")
+source(file="~/RFiles/Shiny/DAS/Modules/UIModules/LandingTab.R")
 
 #Method to reset shiny page
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
@@ -32,35 +33,29 @@ shinyUI(fluidPage(
   extendShinyjs(text = jsResetCode),                      
   
   #Page title on browser
-  title="PLS-PCA",
+  title="DES",
   
   fluidRow(
     column(3,
            #Page title
-           titlePanel("PLS & PCA")),
+           uiOutput(outputId="PageTitle")),
     column(6),
     column(3,
            
            #Button to Reset Shiny
-           actionButton(inputId="reset_button", label="Resetear", icon=icon("times"), 
-                        style="color: #fff; 
-                        border-radius: 10px;
-                        background-color: #d2322d;
-                        border-color: #ac2925;
-                        font-size: 15px;
-                        padding: 6px 30px;
-                        display: inline-block;
-                        margin-top: 20px; 
-                        float:right;")
+           uiOutput(outputId="ResetBtn")
     )
   ),
   #Separator line
   hr(),
   
   #Tabs
-  navbarPage(title="Analisis: ", id="NavPage1",
-             TabCargaDeDatos(id="TabCargaDeDatos")
-             , #End of First Panel
+  navbarPage(title="", id="NavPage1",
+             #Landing Tab
+             tabPanel(title="", value="Tab0", fluidRow()),
+             #First Tab
+             TabCargaDeDatos(id="TabCargaDeDatos"),
+             #Second Tab
              TabPlotDescarga(id="TabPlot&Descarga")
   )
 )
