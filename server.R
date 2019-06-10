@@ -19,16 +19,16 @@
 
 #Seed
 set.seed(101)
-
+"~/GithubProjects/Shiny/"
 #Source Functions and Modules
-source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/simpleEllipse[FUNCTION].R")
-source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/LogicalMatrix[FUNCTION].R")
-source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/VIP[FUNCTION].R")
-source(file="~/RFiles/Shiny/Unscramble-Shiny/Scripts/LimitFUN[FUNCTION].R")
-source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/PLSPlotModule.R")
-source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/PCAPlotModule.R")
-source(file="~/RFiles/Shiny/DAS/Modules/ServerModules/ComputeDataModule.R")
-source(file="~/RFiles/Shiny/DAS/Modules/UIModules/LandingTab.R")
+source(file="~/GithubProjects/Shiny/DAS/Scripts/simpleEllipse[FUNCTION].R")
+source(file="~/GithubProjects/Shiny/DAS/Scripts/LogicalMatrix[FUNCTION].R")
+source(file="~/GithubProjects/Shiny/DAS/Scripts/VIP[FUNCTION].R")
+source(file="~/GithubProjects/Shiny/DAS/Scripts/LimitFUN[FUNCTION].R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/ServerModules/PLSPlotModule.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/ServerModules/PCAPlotModule.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/ServerModules/ComputeDataModule.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/UIModules/LandingTab.R")
 #Blank Theme for ggplot
 theme_blank <- theme(
   panel.grid.major = element_blank(),
@@ -79,14 +79,13 @@ shinyServer(function(input, output, session) {
                         float:right;")
     })
     
-    #First hide Tab1
+    #Hide landing Tab
     hideTab(inputId="NavPage1", target="Tab0")
-    #Then show Tab2 (hidden by default)
+    #Show first Tab1
     showTab(inputId="NavPage1", target="Tab1")
-    #Then go to Tab2
+    #Then go to Tab1
     updateTabsetPanel(session, "NavPage1", selected = "Tab1")
   })
-  
   
   #Disable some optons by default
   shinyjs::disable(id="Cat1")
@@ -170,7 +169,7 @@ shinyServer(function(input, output, session) {
   })
   
   #Shape Matching
-  DB=read.table(file="~/RFiles/Shiny/DAS/DB/MetabolitesDB.txt", header=TRUE, sep="\t")
+  DB=read.table(file="~/GithubProjects/Shiny/DAS/DB/MetabolitesDB.txt", header=TRUE, sep="\t")
   
   #Delete Row of current loaded DF
   observeEvent(input$DeleteRowBtn, {
@@ -334,9 +333,9 @@ shinyServer(function(input, output, session) {
   ComputeData=eventReactive(input$DummyAlert, {
     callModule(module=ComputeDataModule, id="", DFData=as.data.frame(DFReact$DF),
                ColCatMin=ColCatMin(), ColCatMax=ColCatMax(), ColMeta=ColMeta())
+    
   })
-  
-  
+
   #Read output value to display conditional panel
   output$ConditionalPanel=renderText({
     ComputeData()$Status

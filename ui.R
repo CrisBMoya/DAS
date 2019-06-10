@@ -18,9 +18,9 @@
 }
 
 #Load modules
-source(file="~/RFiles/Shiny/DAS/Modules/UIModules/TabPlot&Descarga.R")
-source(file="~/RFiles/Shiny/DAS/Modules/UIModules/CargaDeDatos.R")
-source(file="~/RFiles/Shiny/DAS/Modules/UIModules/LandingTab.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/UIModules/TabPlot&Descarga.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/UIModules/CargaDeDatos.R")
+source(file="~/GithubProjects/Shiny/DAS/Modules/UIModules/LandingTab.R")
 
 #Method to reset shiny page
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
